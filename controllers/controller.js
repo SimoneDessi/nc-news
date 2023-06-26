@@ -1,4 +1,4 @@
-const selectTopics = require("../models/models_core")
+const selectTopics = require("../models/models")
 
 
 const getTopics = (req, res) => {
@@ -6,8 +6,6 @@ const getTopics = (req, res) => {
   .then((topics) =>
   {
     res.status(200).send({ topics })
-  }).catch((err) => {
-    console.log(err)
   })
 }
 
