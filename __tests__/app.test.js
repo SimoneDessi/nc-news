@@ -33,10 +33,10 @@ describe("GET /api", () => {
       .get("/api")
       .expect(200)
       .then(({ body }) => {
-        const keys = Object.keys(endpoints);
-        keys.forEach((key) => {
-          expect(body).toHaveProperty(key);
-          expect(body[key]).toEqual(endpoints[key]);
+        const endPointKeys = Object.keys(endpoints);
+        endPointKeys.forEach((endPointKey) => {
+          expect(body).toHaveProperty(endPointKey);
+          expect(body[endPointKey]).toEqual(endpoints[endPointKey]);
         });
       });
   });
