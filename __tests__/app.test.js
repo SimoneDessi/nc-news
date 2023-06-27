@@ -3,7 +3,6 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
-const topics = require("../db/data/test-data/topics");
 const endpoints = require("../endpoints.json");
 
 beforeEach(() => {
@@ -38,6 +37,26 @@ describe("GET /api", () => {
           expect(body).toHaveProperty(endPointKey);
           expect(body[endPointKey]).toEqual(endpoints[endPointKey]);
         });
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id", () => {
+  test("return 200 status, should get an article by its id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+
+        expect(article).toHaveProperty("author");
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("article_id");
+
+        expect(article).toHaveProperty("topic");
+        expect(article).toHaveProperty("created_at");
+        expect(article).toHaveProperty("votes");
+        expect(article).toHaveProperty("article_img_url");
       });
   });
 });
