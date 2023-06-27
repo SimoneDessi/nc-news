@@ -60,3 +60,24 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+describe('Error Handling 400/404', () => {
+  test("return 404 status, should return an error when the article is not found", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Article not found");
+      });
+  });
+  test("return 400 status, should return an error for non-existent article id", () => {
+    return request(app)
+      .get("/api/articles/apples")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Invalid article id");
+      });
+  });
+});
+
