@@ -1,5 +1,5 @@
 const selectTopics = require("../models/models")
-
+const endpoints = require("../endpoints.json")
 
 const getTopics = (req, res) => {
   selectTopics()
@@ -9,4 +9,8 @@ const getTopics = (req, res) => {
   })
 }
 
-module.exports = getTopics
+const getApi = (req, res) =>{
+  res.status(200).send(endpoints)
+}
+
+module.exports = { getTopics, getApi }
