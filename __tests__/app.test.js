@@ -48,11 +48,11 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-console.log(body)
+
         expect(article).toHaveProperty("author");
         expect(article).toHaveProperty("title");
         expect(article).toHaveProperty("article_id");
-
+        expect(article).toHaveProperty("body")
         expect(article).toHaveProperty("topic");
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
