@@ -1,11 +1,10 @@
-const { selectTopics, selectArticleById } = require("../models/models");
+const { selectTopics, selectArticleById, selectAllArticles} = require("../models/models");
 const endpoints = require("../endpoints.json");
 
 const getTopics = (req, res) => {
-  selectTopics()
-    .then((topics) => {
-      res.status(200).send({ topics });
-    })
+  selectTopics().then((topics) => {
+    res.status(200).send({ topics });
+  });
 };
 
 const getApi = (req, res) => {
@@ -17,13 +16,24 @@ const getArticlesById = (req, res, next) => {
 
   selectArticleById(article_id)
     .then((article) => {
-      
       res.status(200).send({ article });
     })
     .catch((err) => {
-      
-      next(err)
+      next(err);
     });
 };
 
-module.exports = { getTopics, getApi, getArticlesById };
+const getAllArticles = (req, res) => {
+  selectAllArticles()
+    .then((articles) => {
+      if (!articles) {
+        return res.status(404).send({ message: "No articles found" });
+      }
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      res.status(400).send({ message: "Page not found!" });
+    });
+};
+
+module.exports = { getTopics, getApi, getArticlesById, getAllArticles };
