@@ -52,11 +52,33 @@ describe("GET /api/articles/:article_id", () => {
         expect(article).toHaveProperty("author");
         expect(article).toHaveProperty("title");
         expect(article).toHaveProperty("article_id");
-
+        expect(article).toHaveProperty("body")
         expect(article).toHaveProperty("topic");
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url");
+        expect(article.article_id).toBe(1);
       });
   });
 });
+describe('Error Handling 400/404', () => {
+  test("return 404 status, should return an error when the article is not found", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Article not found");
+      });
+  });
+  test("return 400 status, should return an error for not valid article id", () => {
+    return request(app)
+      .get("/api/articles/apples")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
+      });
+  });
+});
+

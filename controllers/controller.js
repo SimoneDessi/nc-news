@@ -17,10 +17,11 @@ const getArticlesById = (req, res, next) => {
 
   selectArticleById(article_id)
     .then((article) => {
+      
       res.status(200).send({ article });
     })
     .catch((err) => {
-      console.log(err);
+      
       next(err)
     });
 };
