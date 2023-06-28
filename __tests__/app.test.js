@@ -81,4 +81,37 @@ describe('Error Handling 400/404', () => {
       });
   });
 });
-
+describe("GET /api/articles", () => {
+  test("return 200 status, will get all the articles in descending order with a comment count and no body property", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        console.log(articles);
+        expect(Array.isArray(articles)).toBe(true);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("comment_count");
+          expect(article).not.toHaveProperty("body");
+        });
+      });
+  });
+});
+describe("Error Handling 404 ", () => {
+  test("should return 404 error when passed the wrong endpoint", () => {
+    return request(app)
+      .get("/api/invalid")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Not found");
+      });
+  });
+});
