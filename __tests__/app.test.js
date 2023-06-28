@@ -57,6 +57,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url");
+        expect(article.article_id).toBe(1);
       });
   });
 });
@@ -70,7 +71,7 @@ describe('Error Handling 400/404', () => {
         expect(body.message).toBe("Article not found");
       });
   });
-  test("return 400 status, should return an error for non-existent article id", () => {
+  test("return 400 status, should return an error for not valid article id", () => {
     return request(app)
       .get("/api/articles/apples")
       .expect(400)

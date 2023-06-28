@@ -9,6 +9,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
   if (err.message) {
     res.status(err.status).send({ message: err.message})
   }
+  else next(err)
 }
 
 exports.handleServerErrors = (err, req, res, next) => {
