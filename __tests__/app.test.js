@@ -48,7 +48,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-
+console.log(body)
         expect(article).toHaveProperty("author");
         expect(article).toHaveProperty("title");
         expect(article).toHaveProperty("article_id");
@@ -76,7 +76,7 @@ describe('Error Handling 400/404', () => {
       .expect(400)
       .then(({ body }) => {
         expect(body).toHaveProperty("message");
-        expect(body.message).toBe("Invalid article id");
+        expect(body.message).toBe("Bad request");
       });
   });
 });
