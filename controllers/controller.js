@@ -45,9 +45,8 @@ const getCommentByArticleId = (req, res, next) => {
 
   selectCommentByArticleId(article_id)
     .then((comments) => {
-      if (comments.length === 0) {
-        return res.status(200).send("No comments available")
-      }
+      
+      
       res.status(200).send({ comments });
     })
     .catch((err) => {

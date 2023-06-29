@@ -29,7 +29,7 @@ const selectAllArticles = () => {
     });
 };
 const selectCommentByArticleId = (article_id) => {
-  
+  //query the datbase in the article table to see if art id, if isnrt there is an empty array
   return db
     .query(
       `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`,
@@ -39,7 +39,8 @@ const selectCommentByArticleId = (article_id) => {
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({ status: 404, message: "Article not found" });
-      } 
+      }
+
       const comments = rows;
       return comments;
     });
@@ -51,3 +52,4 @@ module.exports = {
   selectAllArticles,
   selectCommentByArticleId,
 };
+//first case valid article no comment empty it should be 200, if valid article but not found on the table
