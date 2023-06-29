@@ -42,9 +42,13 @@ const getAllArticles = (req, res) => {
 };
 const getCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
+
   selectCommentByArticleId(article_id)
-    .then((article) => {
-      res.status(200).send({ article });
+    .then((comments) => {
+      if (comments.length === 0) {
+        return res.status(200).send("No comments available")
+      }
+      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);

@@ -118,24 +118,32 @@ describe("Error Handling 404 ", () => {
   });
 });
 describe("GET /api/articles/:article_id/comments", () => {
-  test("return 200 status, should get a comment getby its article id", () => {
+  test("return 200 status, should get a comment by its article id", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        const { article } = body;
-
-        expect(article).toHaveProperty("comment_id");
-
-        expect(article).toHaveProperty("article_id");
-        expect(article).toHaveProperty("body");
-        expect(article).toHaveProperty("author");
-        expect(article).toHaveProperty("created_at");
-        expect(article).toHaveProperty("votes");
-
-        expect(article.article_id).toBe(1);
+        const { comments } = body;
+        expect(Array.isArray(comments)).toBe(true);
+        expect(comments.length).toBeGreaterThan(0)
+        expect(comments).toBeSorted({descending: true})
+        comments.forEach((comment) =>{
+          expect(comment.article_id).toBe(1);
+          expect(comment).toMatchObject({
+           
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            
+        })
+    
+        });
       });
   });
+
 });
 describe("Error Handling 400/404", () => {
   test("return 404 status, should return an error when the article is not found", () => {
@@ -147,7 +155,7 @@ describe("Error Handling 400/404", () => {
         expect(body.message).toBe("Article not found");
       });
   });
-  test("return 404 status, should return an error for not valid article id", () => {
+  test("return 400 status, should return an error for not valid article id", () => {
     return request(app)
       .get("/api/articles/no/comments")
       .expect(400)
