@@ -143,6 +143,14 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
+  test('return 200 status, should return a message when no comments are found', () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ comments })=> {
+        console.log(comments)
+      })
+  });
 
 });
 describe("Error Handling 400/404", () => {
