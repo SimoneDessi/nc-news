@@ -115,3 +115,18 @@ describe("Error Handling 404 ", () => {
       });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('return 201 status, will add a comment for an article ', () => {
+    const comment = { username : "Simo", body : "This is a comment"}
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(comment)
+    .expect(201)
+    .then(({ body })=> {
+      console.log(body)
+    })
+    })
+    
+  });
+

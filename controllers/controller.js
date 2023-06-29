@@ -36,4 +36,18 @@ const getAllArticles = (req, res) => {
     });
 };
 
-module.exports = { getTopics, getApi, getArticlesById, getAllArticles };
+const postComment = (req, res) => {
+  const body = req.body;
+  return insertComment(body).then(({ rows }) => {
+
+
+      res.status(201)
+      .send({ comment : rows[0] });
+  
+  })
+  .catch(err => {
+      console.log(err)
+  });
+}
+
+module.exports = { getTopics, getApi, getArticlesById, getAllArticles, postComment };

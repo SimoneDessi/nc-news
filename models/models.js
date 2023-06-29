@@ -25,4 +25,8 @@ const selectAllArticles = () => {
   .then(({rows}) => { return rows})
 }
 
+const insertComment = () {
+  return db.query(`INSERT INTO comments ()`)
+}
+
 module.exports = { selectTopics, selectArticleById, selectAllArticles };
