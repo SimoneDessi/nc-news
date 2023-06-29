@@ -37,18 +37,19 @@ const getAllArticles = (req, res) => {
       res.status(200).send({ articles });
     })
     .catch((err) => {
-      res.status(400).send({ message: "Page not found!" });
+      next(err);
     });
 };
-const getCommentByArticleId = (req, res) => {
+const getCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  selectCommentByArticleId(article_id).then((article) => {
-    res.status(200).send({ article });
-  });
+  selectCommentByArticleId(article_id)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
-// .catch((err) => {
-//   console.log(err);
-// })
 
 module.exports = {
   getTopics,

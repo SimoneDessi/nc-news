@@ -36,6 +36,9 @@ const selectCommentByArticleId = (article_id) => {
     )
 
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, message: "Article not found" });
+      }
       const article = rows[0];
 
       return article;
@@ -48,5 +51,3 @@ module.exports = {
   selectAllArticles,
   selectCommentByArticleId,
 };
-//  WHERE article_id = $1
-// ORDER BY created_at DESC

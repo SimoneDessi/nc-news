@@ -124,7 +124,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article, "<<<<<article from body in test");
+
         expect(article).toHaveProperty("comment_id");
 
         expect(article).toHaveProperty("article_id");
@@ -134,6 +134,26 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(article).toHaveProperty("votes");
 
         expect(article.article_id).toBe(1);
+      });
+  });
+});
+describe("Error Handling 400/404", () => {
+  test("return 404 status, should return an error when the article is not found", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Article not found");
+      });
+  });
+  test("return 404 status, should return an error for not valid article id", () => {
+    return request(app)
+      .get("/api/articles/no/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
       });
   });
 });
