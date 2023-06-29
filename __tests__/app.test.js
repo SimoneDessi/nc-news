@@ -118,7 +118,7 @@ describe("Error Handling 404 ", () => {
   });
 });
 describe("GET /api/articles/:article_id/comments", () => {
-  test("return 200 status, should get a comment  by its article id", () => {
+  test("return 200 status, should get a comment getby its article id", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
