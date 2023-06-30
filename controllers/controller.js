@@ -2,7 +2,11 @@ const {
   selectTopics,
   selectArticleById,
   selectAllArticles,
-  insertComment
+
+  insertComment,
+
+  selectCommentByArticleId,
+
 } = require("../models/models");
 const endpoints = require("../endpoints.json");
 
@@ -37,7 +41,24 @@ const getAllArticles = (req, res) => {
       res.status(200).send({ articles });
     })
     .catch((err) => {
-      res.status(400).send({ message: "Page not found!" });
+      next(err);
+    });
+};
+const getCommentByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+
+  selectCommentByArticleId(article_id)
+    .then((comments) => {
+     
+    
+      res.status(200).send({ comments })
+     
+      
+      
+      ;
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -61,4 +82,5 @@ module.exports = {
   getArticlesById,
   getAllArticles,
   postComment,
+  getCommentByArticleId,
 };
