@@ -45,9 +45,13 @@ const getCommentByArticleId = (req, res, next) => {
 
   selectCommentByArticleId(article_id)
     .then((comments) => {
+     
+    
+      res.status(200).send({ comments })
+     
       
       
-      res.status(200).send({ comments });
+      ;
     })
     .catch((err) => {
       next(err);

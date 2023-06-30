@@ -143,12 +143,14 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test('return 200 status, should return an error message when no comments are found', () => {
+  test(' should return 200 status  when no comments are found', () => {
     return request(app)
-      .get("/api/articles/1/comments")
+      .get("/api/articles/12/comments")
       .expect(200)
-      .then(({ comments })=> {
-        expect(comments).not.toBe([])
+      .then(({ body })=> {
+        const { comments } = body
+       
+        expect(comments).toEqual([])
       })
   });
 
@@ -159,6 +161,7 @@ describe("Error Handling 400/404", () => {
       .get("/api/articles/999/comments")
       .expect(404)
       .then(({ body }) => {
+        
         expect(body).toHaveProperty("message");
         expect(body.message).toBe("Article not found");
       });

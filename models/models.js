@@ -41,10 +41,15 @@ const selectCommentByArticleId = (article_id) => {
             [article_id]
           )
           .then(({ rows }) => {
-            if (rows.length !== 0) {
-              const comments = rows;
+            const comments = rows;
+            if (comments.length === 0) {
+             
+              return comments
+            }else {
+             
               return comments;
             }
+           
           });
       }
     });
