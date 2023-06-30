@@ -14,6 +14,7 @@ const {
 const app = express();
 
 app.use(express.json())
+
 app.get("/api/topics", getTopics);
 
 app.get("/api/", getApi);
@@ -34,4 +35,6 @@ app.all("*", (req, res) => {
 app.use(handlePsqlErrors);
 app.use(handleCustomErrors);
 app.use(handleServerErrors);
+
+
 module.exports = app;

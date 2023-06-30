@@ -1,6 +1,8 @@
 exports.handlePsqlErrors = (err, req, res, next) => {
-  if (err.code === "22P02" ) {
+  if (err.code === "22P02") {
     res.status(400).send({message: "Bad request"})
+  }else if (err.code === '23502' ){
+    res.status(400).send({message: "Comment not valid"})
   }
   else next(err)
 }

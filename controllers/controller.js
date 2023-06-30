@@ -65,14 +65,14 @@ const getCommentByArticleId = (req, res, next) => {
 const postComment = (req, res) => {
   const {article_id} = req.params
   const {author, body} = req.body
-  console.log(article_id, author, body)
+
   return insertComment(article_id, author, body)
     .then(({ comment }) => {
 
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log(err);
+     console.log(err);
     });
 };
 
