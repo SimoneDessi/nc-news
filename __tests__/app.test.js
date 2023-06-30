@@ -142,3 +142,22 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+describe('Error handling 400', () => {
+  test('should return 400 error if wrong values are passed', () => {
+    const comment = {
+    body: "This is a comment.",
+    author: "icell",
+    article_id: 60,
+  };
+
+  return request(app)
+    .post("/api/articles/1/comments")
+    .send(comment)
+    .expect(400)
+    .then(({ body }) => {
+      const { comment } = body;
+      console.log(comment);
+    
+  });
+});
+});
