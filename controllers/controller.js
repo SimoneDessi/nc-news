@@ -1,4 +1,9 @@
-const { selectTopics, selectArticleById, selectAllArticles} = require("../models/models");
+const {
+  selectTopics,
+  selectArticleById,
+  selectAllArticles,
+  insertComment
+} = require("../models/models");
 const endpoints = require("../endpoints.json");
 
 const getTopics = (req, res) => {
@@ -37,17 +42,23 @@ const getAllArticles = (req, res) => {
 };
 
 const postComment = (req, res) => {
-  const body = req.body;
-  return insertComment(body).then(({ rows }) => {
+  const {article_id} = req.params
+  const {author, body} = req.body
+  console.log(article_id, author, body)
+  return insertComment(article_id, author, body)
+    .then(({ comment }) => {
 
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-      res.status(201)
-      .send({ comment : rows[0] });
-  
-  })
-  .catch(err => {
-      console.log(err)
-  });
-}
-
-module.exports = { getTopics, getApi, getArticlesById, getAllArticles, postComment };
+module.exports = {
+  getTopics,
+  getApi,
+  getArticlesById,
+  getAllArticles,
+  postComment,
+};

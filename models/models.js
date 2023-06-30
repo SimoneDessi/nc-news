@@ -25,8 +25,12 @@ const selectAllArticles = () => {
   .then(({rows}) => { return rows})
 }
 
-// const insertComment = () {
-//   return db.query(`INSERT INTO comments ()`)
-// }
+const insertComment = (article_id, author, body) => {
+  return db.query(`INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [article_id, author, body])
+  .then(({ rows}) => {
+    const comment = rows[0];
+    return {comment}
+  })
+}
 
-module.exports = { selectTopics, selectArticleById, selectAllArticles };
+module.exports = { selectTopics, selectArticleById, selectAllArticles, insertComment };

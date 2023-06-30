@@ -52,7 +52,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(article).toHaveProperty("author");
         expect(article).toHaveProperty("title");
         expect(article).toHaveProperty("article_id");
-        expect(article).toHaveProperty("body")
+        expect(article).toHaveProperty("body");
         expect(article).toHaveProperty("topic");
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
@@ -61,7 +61,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
-describe('Error Handling 400/404', () => {
+describe("Error Handling 400/404", () => {
   test("return 404 status, should return an error when the article is not found", () => {
     return request(app)
       .get("/api/articles/999")
@@ -116,17 +116,29 @@ describe("Error Handling 404 ", () => {
   });
 });
 
-// describe('POST /api/articles/:article_id/comments', () => {
-//   test('return 201 status, will add a comment for an article ', () => {
-//     const comment = { username : "Simo", body : "This is a comment"}
-//     return request(app)
-//     .post("/api/articles/1/comments")
-//     .send(comment)
-//     .expect(201)
-//     .then(({ body })=> {
-//       console.log(body)
-//     })
-//     })
-    
-//   });
+describe("POST /api/articles/:article_id/comments", () => {
+  test("return 201 status, will add a comment for an article ", () => {
+    const comment = {
+      body: "This is a comment.",
+      author: "icellusedkars",
+      article_id: 1,
+    };
 
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(comment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(comment).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+});
