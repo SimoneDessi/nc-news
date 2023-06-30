@@ -1,4 +1,9 @@
-const { selectTopics, selectArticleById, selectAllArticles} = require("../models/models");
+const {
+  selectTopics,
+  selectArticleById,
+  selectAllArticles,
+  selectCommentByArticleId,
+} = require("../models/models");
 const endpoints = require("../endpoints.json");
 
 const getTopics = (req, res) => {
@@ -32,8 +37,31 @@ const getAllArticles = (req, res) => {
       res.status(200).send({ articles });
     })
     .catch((err) => {
-      res.status(400).send({ message: "Page not found!" });
+      next(err);
+    });
+};
+const getCommentByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+
+  selectCommentByArticleId(article_id)
+    .then((comments) => {
+     
+    
+      res.status(200).send({ comments })
+     
+      
+      
+      ;
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
-module.exports = { getTopics, getApi, getArticlesById, getAllArticles };
+module.exports = {
+  getTopics,
+  getApi,
+  getArticlesById,
+  getAllArticles,
+  getCommentByArticleId,
+};
