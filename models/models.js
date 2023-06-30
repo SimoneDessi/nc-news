@@ -29,20 +29,24 @@ const selectAllArticles = () => {
     });
 };
 const selectCommentByArticleId = (article_id) => {
-  //query the datbase in the article table to see if art id, if isnrt there is an empty array
   return db
-    .query(
-      `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`,
-      [article_id]
-    )
-
+    .query("SELECT * FROM articles WHERE article_id = $1", [article_id])
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({ status: 404, message: "Article not found" });
+      } else {
+        return db
+          .query(
+            `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`,
+            [article_id]
+          )
+          .then(({ rows }) => {
+            if (rows.length !== 0) {
+              const comments = rows;
+              return comments;
+            }
+          });
       }
-
-      const comments = rows;
-      return comments;
     });
 };
 

@@ -148,7 +148,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ comments })=> {
-        console.log(comments)
+        expect(comments).not.toBe([])
       })
   });
 
