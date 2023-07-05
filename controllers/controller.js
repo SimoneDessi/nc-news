@@ -2,7 +2,11 @@ const {
   selectTopics,
   selectArticleById,
   selectAllArticles,
+
+  insertComment,
+
   selectCommentByArticleId,
+
 } = require("../models/models");
 const endpoints = require("../endpoints.json");
 
@@ -58,10 +62,26 @@ const getCommentByArticleId = (req, res, next) => {
     });
 };
 
+const postComment = (req, res, next) => {
+  const {article_id} = req.params
+  const {username, body} = req.body
+
+  return insertComment(article_id, username, body)
+    .then(({ comment }) => {
+
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      console.log(err)
+     next(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getApi,
   getArticlesById,
   getAllArticles,
+  postComment,
   getCommentByArticleId,
 };

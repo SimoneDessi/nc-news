@@ -125,35 +125,31 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         const { comments } = body;
         expect(Array.isArray(comments)).toBe(true);
-        expect(comments.length).toBeGreaterThan(0)
-        expect(comments).toBeSorted({descending: true})
-        comments.forEach((comment) =>{
+        expect(comments.length).toBeGreaterThan(0);
+        expect(comments).toBeSorted({ descending: true });
+        comments.forEach((comment) => {
           expect(comment.article_id).toBe(1);
           expect(comment).toMatchObject({
-           
             comment_id: expect.any(Number),
             body: expect.any(String),
             article_id: expect.any(Number),
             author: expect.any(String),
             votes: expect.any(Number),
             created_at: expect.any(String),
-            
-        })
-    
+          });
         });
       });
   });
-  test(' should return 200 status  when no comments are found', () => {
+  test(" should return 200 status  when no comments are found", () => {
     return request(app)
       .get("/api/articles/12/comments")
       .expect(200)
-      .then(({ body })=> {
-        const { comments } = body
-       
-        expect(comments).toEqual([])
-      })
-  });
+      .then(({ body }) => {
+        const { comments } = body;
 
+        expect(comments).toEqual([]);
+      });
+  });
 });
 describe("Error Handling 400/404", () => {
   test("return 404 status, should return an error when the article is not found", () => {
@@ -161,7 +157,6 @@ describe("Error Handling 400/404", () => {
       .get("/api/articles/999/comments")
       .expect(404)
       .then(({ body }) => {
-        
         expect(body).toHaveProperty("message");
         expect(body.message).toBe("Article not found");
       });
@@ -173,6 +168,98 @@ describe("Error Handling 400/404", () => {
       .then(({ body }) => {
         expect(body).toHaveProperty("message");
         expect(body.message).toBe("Bad request");
+      });
+  });
+});
+describe("POST /api/articles/:article_id/comments", () => {
+  test("return 201 status, will add a comment for an article ", () => {
+    const comment = {
+      body: "This is a comment.",
+      username: "icellusedkars",
+      article_id: 1,
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(comment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+
+        expect(comment).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+});
+describe("Error handling 400", () => {
+  test("return 400 status, should return an error for not valid article id", () => {
+    const comment = {
+      body: "This is a comment.",
+      username: "icellusedkars",
+    };
+    return request(app)
+      .post("/api/articles/banana/comments")
+      .send(comment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
+      });
+  });
+  test("should return 400 error if wrong values are passed", () => {
+    const wrongComment = {
+      username: "",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(wrongComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
+      });
+  });
+  test("should return 400 error if wrong values are passed", () => {
+    const wrongComment = {
+      username: "",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(wrongComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
+      });
+  });
+
+  test("should return 404 error if wrong username is passed", () => {
+    const wrongComment = {
+      username: "Simone",
+      body: "This is a valid comment",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(wrongComment)
+      .expect(404)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Not found");
       });
   });
 });
