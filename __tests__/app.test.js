@@ -175,7 +175,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   test("return 201 status, will add a comment for an article ", () => {
     const comment = {
       body: "This is a comment.",
-      author: "icellusedkars",
+      username: "icellusedkars",
       article_id: 1,
     };
 
@@ -198,37 +198,68 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 describe("Error handling 400", () => {
-  test("return 400 status, should return an error for not valid id", () => {
+  test("return 400 status, should return an error for not valid article id", () => {
     const comment = {
       body: "This is a comment.",
-      author: "icellusedkars",
-      article_id: 1,
+      username: "icellusedkars",
     };
     return request(app)
       .post("/api/articles/banana/comments")
       .send(comment)
       .expect(400)
-      .then(({body}) => {
-        const { comment } = body
-        console.log(comment)
-      })
-      
+      .then(({ body }) => {
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
+      });
+  });
+  test("should return 400 error if wrong values are passed", () => {
+    const wrongComment = {
+      username: "",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(wrongComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
+      });
+  });
+  test("should return 400 error if wrong values are passed", () => {
+    const wrongComment = {
+      username: "",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(wrongComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Bad request");
       });
   });
 
-//   test("should return 400 error if wrong values are passed", () => {
-//     const wrongComment = {
-//       body: "This is a comment.",
-//       author: "",
-//       article_id: 9,
-//     };
+  test("should return 404 error if wrong username is passed", () => {
+    const wrongComment = {
+      username: "Simone",
+      body: "This is a valid comment",
+    };
 
-//     return request(app)
-//       .post("/api/articles/1/comments")
-//       .send(wrongComment)
-//       .expect(400)
-//       .then(({ body }) => {
-//         console.log(body);
-//       });
-//   });
-// });
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(wrongComment)
+      .expect(404)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(body).toHaveProperty("message");
+        expect(body.message).toBe("Not found");
+      });
+  });
+});
