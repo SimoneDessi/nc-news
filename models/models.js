@@ -43,25 +43,71 @@ const selectCommentByArticleId = (article_id) => {
           .then(({ rows }) => {
             const comments = rows;
             if (comments.length === 0) {
-             
-              return comments
-            }else {
-             
+              return comments;
+            } else {
               return comments;
             }
-           
           });
       }
     });
 };
 
 const insertComment = (article_id, username, body) => {
-  
-  return db.query(`INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [article_id, username, body])
-  .then(({ rows}) => {
-    const comment = rows[0];
-    return {comment}
-  })
-}
+  return db
+    .query(
+      `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *;`,
+      [article_id, username, body]
+    )
+    .then(({ rows }) => {
+      const comment = rows[0];
+      return { comment };
+    });
+};
 
-module.exports = { selectTopics, selectArticleById, selectAllArticles, insertComment, selectCommentByArticleId };
+const updateArticleVotes = (article_id, inc_votes) => {
+  return db
+    .query("UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;", [
+      inc_votes,
+      article_id,
+    ])
+    .then(({ rows }) => {
+     
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, message: "Article not found" });
+      }
+      const updatedArticle = rows[0];
+     
+      return updatedArticle;
+    });
+};
+
+const deleteCommentById = (comment_id) => {
+  return db.query("DELETE FROM comments WHERE comment_id = $1 RETURNING *;", [comment_id])
+  .then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, message: "Comment not found" });
+    }
+
+    return rows;
+  })
+};
+
+const selectUsers = () => {
+  return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+    console.log(rows)
+    return rows;
+  });
+};
+
+
+
+module.exports = {
+  selectTopics,
+  selectArticleById,
+  selectAllArticles,
+  insertComment,
+  selectCommentByArticleId,
+  updateArticleVotes,
+  deleteCommentById,
+  selectUsers
+};

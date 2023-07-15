@@ -2,12 +2,12 @@ const {
   selectTopics,
   selectArticleById,
   selectAllArticles,
-
   insertComment,
-
   selectCommentByArticleId,
-
+  updateArticleVotes,
+  deleteCommentById
 } = require("../models/models");
+
 const endpoints = require("../endpoints.json");
 
 const getTopics = (req, res) => {
@@ -49,13 +49,7 @@ const getCommentByArticleId = (req, res, next) => {
 
   selectCommentByArticleId(article_id)
     .then((comments) => {
-     
-    
-      res.status(200).send({ comments })
-     
-      
-      
-      ;
+      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
@@ -63,19 +57,59 @@ const getCommentByArticleId = (req, res, next) => {
 };
 
 const postComment = (req, res, next) => {
-  const {article_id} = req.params
-  const {username, body} = req.body
+  const { article_id } = req.params;
+  const { username, body } = req.body;
 
   return insertComment(article_id, username, body)
     .then(({ comment }) => {
-
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log(err)
-     next(err);
+     ;
+      next(err);
     });
 };
+
+const patchArticle = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body
+ 
+  
+  updateArticleVotes(article_id, inc_votes)
+  .then(( articles ) => {
+
+    res.status(200).send({articles});
+
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  deleteCommentById(comment_id)
+  .then(() => {
+    
+    res.status(204).send();
+  })
+  .catch((err) => {
+    next(err);
+  });
+  
+}
+
+const getUsers = (req, res, next) => {
+  selectUsers()
+  .then((users) => {
+    res.status(200).send({ users });
+  })
+//   .catch((err) => {
+//     next(err);
+//   });
+};
+
 
 module.exports = {
   getTopics,
@@ -84,4 +118,7 @@ module.exports = {
   getAllArticles,
   postComment,
   getCommentByArticleId,
+  patchArticle,
+  deleteComment,
+  getUsers
 };
