@@ -212,6 +212,7 @@ describe("Error handling 400", () => {
         expect(body.message).toBe("Bad request");
       });
   });
+
   test("should return 400 error if wrong values are passed", () => {
     const wrongComment = {
       username: "",
@@ -222,24 +223,6 @@ describe("Error handling 400", () => {
       .send(wrongComment)
       .expect(400)
       .then(({ body }) => {
-        const { comment } = body;
-        console.log(comment);
-        expect(body).toHaveProperty("message");
-        expect(body.message).toBe("Bad request");
-      });
-  });
-  test("should return 400 error if wrong values are passed", () => {
-    const wrongComment = {
-      username: "",
-    };
-
-    return request(app)
-      .post("/api/articles/1/comments")
-      .send(wrongComment)
-      .expect(400)
-      .then(({ body }) => {
-        const { comment } = body;
-        console.log(comment);
         expect(body).toHaveProperty("message");
         expect(body.message).toBe("Bad request");
       });
@@ -256,10 +239,130 @@ describe("Error handling 400", () => {
       .send(wrongComment)
       .expect(404)
       .then(({ body }) => {
-        const { comment } = body;
-        console.log(comment);
         expect(body).toHaveProperty("message");
         expect(body.message).toBe("Not found");
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("return 200 status, should change the votes of an article by its id", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        const { votes } = body.articles;
+        expect(votes).toBe(101);
+      });
+  });
+
+  test("return 200 status, should decrement the votes of an article by its id", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: -5 })
+      .expect(200)
+      .then(({ body }) => {
+      
+        const { votes } = body.articles;
+
+        expect(votes).toBe(95);
+      });
+  });
+  describe("Error handling 400", () => {
+    test("return 400 status, should handle invalid inc_votes value", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: "invalid" })
+        .expect(400)
+        .then(({ body }) => {
+          const { message } = body;
+          expect(message).toBe("Bad request");
+        });
+    });
+
+    test("return 404 status, should handle non-existing article_id", () => {
+      return request(app)
+        .patch("/api/articles/9999")
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+          const { message } = body;
+          expect(message).toBe("Article not found");
+        });
+    });
+    test("returns 404 status for valid article_id but no resource found", () => {
+      return request(app)
+        .patch("/api/articles/99999")
+        .send({ inc_votes: 10 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Article not found");
+        });
+    });
+    test("returns 400 status for article_id NaN", () => {
+      return request(app)
+        .patch("/api/articles/not-a-number")
+        .send({ inc_votes: 10 })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request");
+        });
+    });
+
+    test("returns 400 status for malformed request (missing values)", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request");
+        });
+    });
+  });
+});
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('returns 204 status and no content for a valid comment_id', () => {
+    return request(app)
+    .delete("/api/comments/1")
+    .expect(204)
+   
+  });
+  describe("Error handling 400, 404", () => {
+    test('returns 400 status for comment_id NaN', () => {
+      return request(app)
+        .delete("/api/comments/not-a-number")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe('Bad request');
+        });
+    });
+  
+    test('returns 404 status for valid comment_id but no resource found', () => {
+      return request(app)
+        .delete("/api/comments/9999") 
+        .expect(404)
+        .then((response) => {
+          expect(response.body.message).toBe('Comment not found');
+        });
+    });
+  });
+});
+// describe("GET /api/users", () => {
+//   test.only("return 200 status, should return an array of users object", () => {
+//     return request(app)
+//       .get("/api/users")
+//       .expect(200)
+//       // .then(({ body }) => {
+//       //   console.log(body)
+
+//       //   expect(body.users.length).toBeGreaterThan(0);
+//       //   expect(Array.isArray(body.users)).toBe(true);
+//       //   body.users.forEach((users) => {
+//       //     expect(users).toHaveProperty("name");
+//       //     expect(users).toHaveProperty("username");
+//       //   });
+//       });
+//   });
+// // });

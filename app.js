@@ -3,8 +3,8 @@ const {
   getTopics,
   getApi,
   getArticlesById,
-  getAllArticles, getCommentByArticleId
-, postComment} = require("./controllers/controller.js");
+  getAllArticles, getCommentByArticleId, deleteComment, getUsers
+, postComment, patchArticle} = require("./controllers/controller.js");
 const {
   handlePsqlErrors,
   handleCustomErrors,
@@ -26,6 +26,12 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentByArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment)
+
+app.patch("/api/articles/:article_id", patchArticle)
+
+app.delete("/api/comments/:comment_id", deleteComment)
+
+app.get("/api/users", getUsers);
 
 
 app.all("*", (req, res) => {
