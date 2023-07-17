@@ -5,7 +5,7 @@ const {
   insertComment,
   selectCommentByArticleId,
   updateArticleVotes,
-  deleteCommentById
+  deleteCommentById, selectUsers
 } = require("../models/models");
 
 const endpoints = require("../endpoints.json");
@@ -101,13 +101,24 @@ const deleteComment = (req, res, next) => {
 }
 
 const getUsers = (req, res, next) => {
-  selectUsers()
-  .then((users) => {
+  selectUsers().then((users) => {
     res.status(200).send({ users });
   })
-//   .catch((err) => {
-//     next(err);
-//   });
+  .catch((err) => {
+    next(err);
+  });
+};
+
+const getArticles = (req, res, next) => {
+  const { topic, sort_by, order } = req.query;
+
+  selectArticles(topic, sort_by, order)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 
@@ -120,5 +131,6 @@ module.exports = {
   getCommentByArticleId,
   patchArticle,
   deleteComment,
-  getUsers
+  getUsers,
+  getArticles
 };
