@@ -349,20 +349,47 @@ describe('DELETE /api/comments/:comment_id', () => {
     });
   });
 });
-// describe("GET /api/users", () => {
-//   test.only("return 200 status, should return an array of users object", () => {
-//     return request(app)
-//       .get("/api/users")
-//       .expect(200)
-//       // .then(({ body }) => {
-//       //   console.log(body)
+describe("GET /api/users", () => {
+  test("return 200 status, should return an array of users object", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+const { users } = body
+        expect(users.length).toBeGreaterThan(0);
+        expect(Array.isArray(users)).toBe(true);
+        users.forEach((users) => {
+          expect(users).toHaveProperty("name");
+          expect(users).toHaveProperty("username");
+          expect(users).toHaveProperty("avatar_url");
+        });
+      });
+  });
+});
 
-//       //   expect(body.users.length).toBeGreaterThan(0);
-//       //   expect(Array.isArray(body.users)).toBe(true);
-//       //   body.users.forEach((users) => {
-//       //     expect(users).toHaveProperty("name");
-//       //     expect(users).toHaveProperty("username");
-//       //   });
-//       });
-//   });
-// // });
+describe("GET /api/articles", () => {
+  test("return 200 status, should return an array of articles", async () => {
+    const response = await request(app).get("/api/articles").expect(200)
+    .then(({ body }) => {
+
+    expect(body.articles).toBeDefined();
+    expect(Array.isArray(body.articles)).toBe(true);
+    expect(body.articles.length).toBeGreaterThan(0);
+    })
+  });
+  test("return 200 status with valid sort_by query, should return sorted articles", async () => {
+    request(app).get("/api/articles?sort_by=votes")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles).toBeDefined();
+      expect(Array.isArray(articles)).toBe(true);
+      expect(articles.length).toBeGreaterThan(0);
+      articles.forEach((article) => {
+        expect(article.votes).toBeLessThanOrEqual(article.votes);
+      })
+
+  })
+    })
+  });
+

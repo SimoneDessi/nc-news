@@ -98,6 +98,30 @@ const selectUsers = () => {
     return rows;
   });
 };
+const selectArticles = (topic, sort_by = "created_at", order = "desc") => {
+ 
+
+  if (!sort_by) {
+    return Promise.reject({ status: 400, message: "Invalid sort_by column" });
+  }
+
+  if (order !== "asc" && order !== "desc") {
+    return Promise.reject({ status: 400, message: "Invalid order value" });
+  }
+
+  const query = `
+    SELECT *
+    FROM articles
+    ${topic ? "WHERE topic = $1" : ""}
+    ORDER BY ${sort_by} ${order}
+  `;
+
+  const params = topic ? [topic] : [];
+
+  return db.query(query, params).then(({ rows }) => {
+    return rows;
+  });
+}; 
 
 
 
@@ -109,5 +133,5 @@ module.exports = {
   selectCommentByArticleId,
   updateArticleVotes,
   deleteCommentById,
-  selectUsers
+  selectUsers,
 };
