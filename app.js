@@ -3,11 +3,11 @@ const {
   getTopics,
   getApi,
   getArticlesById,
-  getAllArticles,
+  getArticles,
   getCommentByArticleId,
   deleteComment,
   getUsers,
-  getArticles,
+ 
   postComment,
   patchArticle,
 } = require("./controllers/controller.js");
@@ -29,7 +29,7 @@ app.get("/api/", getApi);
 
 app.get("/api/articles/:article_id", getArticlesById);
 
-app.get("/api/articles", getAllArticles);
+app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentByArticleId);
 
@@ -43,7 +43,7 @@ app.get("/api/users", getUsers);
 
 app.get("/api/articles", getArticles);
 
-app.all("*", (req, res) => {
+app.all("*", (req, res,) => {
   res.status(404).send({ message: "Not found" });
 });
 

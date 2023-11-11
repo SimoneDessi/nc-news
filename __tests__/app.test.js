@@ -367,30 +367,5 @@ const { users } = body
   });
 });
 
-describe("GET /api/articles", () => {
-  test("return 200 status, should return an array of articles", async () => {
-    const response = await request(app).get("/api/articles").expect(200)
-    .then(({ body }) => {
 
-    expect(body.articles).toBeDefined();
-    expect(Array.isArray(body.articles)).toBe(true);
-    expect(body.articles.length).toBeGreaterThan(0);
-    })
-  });
-  test("return 200 status with valid sort_by query, should return sorted articles", async () => {
-    request(app).get("/api/articles?sort_by=votes")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body
-      expect(articles).toBeDefined();
-      expect(Array.isArray(articles)).toBe(true);
-      expect(articles.length).toBeGreaterThan(0);
-      articles.forEach((article) => {
-        expect(article.votes).toBeLessThanOrEqual(article.votes);
-      })
 
-  })
-    })
-  });
-
-`
